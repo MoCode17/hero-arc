@@ -3,6 +3,10 @@ import { createClient } from "@/lib/supabase-client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import type { Tables } from "@/types/database";
 
+// Session persistence keys
+const STAY_SIGNED_IN_KEY = "staySignedIn";
+const SESSION_ACTIVE_KEY = "sessionActive";
+
 // Auth state type
 export interface AuthState {
   user: SupabaseUser | null;
@@ -90,6 +94,26 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       } = await supabase.auth.getSession();
 
       if (session?.user) {
+        // Check if user should stay signed in
+        const staySignedIn = localStorage.getItem(STAY_SIGNED_IN_KEY) === "true";
+        const sessionWasActive = sessionStorage.getItem(SESSION_ACTIVE_KEY) === "true";
+
+        // If user didn't opt to stay signed in and this is a new browser session
+        // (sessionStorage is empty but we have an auth session), sign them out
+        if (!staySignedIn && !sessionWasActive) {
+          await supabase.auth.signOut();
+          set({
+            user: null,
+            profile: null,
+            isLoading: false,
+            isAuthenticated: false,
+          });
+          return () => {};
+        }
+
+        // Mark this browser session as active
+        sessionStorage.setItem(SESSION_ACTIVE_KEY, "true");
+
         const profile = await fetchProfile(session.user.id);
         set({
           user: session.user,
@@ -120,6 +144,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN" && session?.user) {
+        // Mark session as active when signed in
+        sessionStorage.setItem(SESSION_ACTIVE_KEY, "true");
+
         const profile = await fetchProfile(session.user.id);
         set({
           user: session.user,
@@ -128,6 +155,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
           isAuthenticated: true,
         });
       } else if (event === "SIGNED_OUT") {
+        // Clear session markers on sign out
+        localStorage.removeItem(STAY_SIGNED_IN_KEY);
+        sessionStorage.removeItem(SESSION_ACTIVE_KEY);
+
         set({
           user: null,
           profile: null,
@@ -164,6 +195,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
 
     if (data.user) {
+      // Mark session as active for this browser tab/window
+      sessionStorage.setItem(SESSION_ACTIVE_KEY, "true");
+
       const profile = await fetchProfile(data.user.id);
       set({
         user: data.user,
@@ -202,6 +236,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     // If email confirmation is disabled, user is signed in immediately
     if (data.user && data.session) {
+      // New users are assumed to want persistent sessions by default
+      localStorage.setItem(STAY_SIGNED_IN_KEY, "true");
+      sessionStorage.setItem(SESSION_ACTIVE_KEY, "true");
+
       set({
         user: data.user,
         profile: null, // New user, no profile yet
@@ -221,6 +259,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     const supabase = createClient();
 
     set({ isLoading: true });
+
+    // Clear session persistence markers immediately
+    localStorage.removeItem(STAY_SIGNED_IN_KEY);
+    sessionStorage.removeItem(SESSION_ACTIVE_KEY);
 
     await supabase.auth.signOut();
 
