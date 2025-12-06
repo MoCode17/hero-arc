@@ -7,7 +7,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-16">
         <div className="text-center max-w-2xl mx-auto">
           {/* Logo/Brand */}
-          <div className="mb-8">
+          <div className="flex flex-col items-center gap-4 mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
               <svg
                 className="w-10 h-10 text-primary"
@@ -24,9 +24,12 @@ export default function Home() {
                 />
               </svg>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-              CalorieTracker
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+              Hero Arc
             </h1>
+            <h2 className="text-2xl md:text-3xl text-foreground">
+              Calorie Tracker
+            </h2>
             <p className="text-lg text-gray-500">
               Simple. Intuitive. Effective.
             </p>
@@ -34,9 +37,9 @@ export default function Home() {
 
           {/* Value Proposition */}
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Track your calories and macros effortlessly. Achieve your health
-            goals with a beautifully designed app that makes nutrition tracking
-            feel natural.
+            🥇 Master your calories and macros effortlessly. Transform your
+            everyday habits into real progress and fuel your journey to your
+            strongest self.
           </p>
 
           {/* CTA Buttons */}
@@ -73,7 +76,9 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground mb-2">Quick Logging</h3>
+              <h3 className="font-semibold text-foreground mb-2">
+                Quick Logging
+              </h3>
               <p className="text-sm text-gray-500">
                 Log meals in seconds with our intuitive interface
               </p>
@@ -95,7 +100,9 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground mb-2">Track Progress</h3>
+              <h3 className="font-semibold text-foreground mb-2">
+                Track Progress
+              </h3>
               <p className="text-sm text-gray-500">
                 Visualize your journey with beautiful charts
               </p>
@@ -117,7 +124,9 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="font-semibold text-foreground mb-2">Personalized Goals</h3>
+              <h3 className="font-semibold text-foreground mb-2">
+                Personalized Goals
+              </h3>
               <p className="text-sm text-gray-500">
                 Get custom calorie targets based on your goals
               </p>

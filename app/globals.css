@@ -93,8 +93,10 @@
   --color-fat: var(--fat);
 
   /* Fonts - using system font stack */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
 }
 
 /* Dark mode support */
@@ -119,8 +121,6 @@
 /* Base styles */
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 html,
