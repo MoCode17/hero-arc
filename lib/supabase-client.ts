@@ -1,35 +1,22 @@
-// Supabase Client Configuration
-// TODO: Replace with actual Supabase credentials
+import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "@/types/database";
 
-// For now, export placeholder functions that will be implemented
-// when Supabase is configured
+// Environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-
-// This will be replaced with actual Supabase client initialization
-// import { createClient } from '@supabase/supabase-js'
-// export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-export const isSupabaseConfigured = () => {
+// Check if Supabase is configured
+export function isSupabaseConfigured(): boolean {
   return Boolean(supabaseUrl && supabaseAnonKey);
-};
+}
 
-// Placeholder for Supabase client
-// Will be properly initialized when Supabase credentials are added
-export const supabase = {
-  auth: {
-    getSession: async () => ({ data: { session: null }, error: null }),
-    getUser: async () => ({ data: { user: null }, error: null }),
-    signInWithPassword: async () => ({ data: { user: null, session: null }, error: null }),
-    signUp: async () => ({ data: { user: null, session: null }, error: null }),
-    signOut: async () => ({ error: null }),
-    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-  },
-  from: () => ({
-    select: () => Promise.resolve({ data: null, error: null }),
-    insert: () => Promise.resolve({ data: null, error: null }),
-    update: () => Promise.resolve({ data: null, error: null }),
-    delete: () => Promise.resolve({ data: null, error: null }),
-  }),
-};
+// Create browser client for client-side components
+export function createClient() {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file."
+    );
+  }
+
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+}
